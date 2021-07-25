@@ -114,7 +114,7 @@ int subGraphReturnsToZero(vertex_t *v_in, int *path) {
         }
         node_t *aux = v->edge_out->head;
         while(aux != NULL) {
-            vertex_t *v_aux = (vertex_t *)aux->data;
+            vertex_t *v_aux = (vertex_t *)((edge_t *)aux->data)->dest;
             if(visited[v_aux->id] == NULL && searchArray(path, v_aux->id) == 0) {
                 push(dfs_stack, initNode(v_aux));
             }
@@ -162,10 +162,10 @@ void MaxTSP(path_t *p) {
     } else {
         currentVertex = vertexSearch(g, 0);
     }
-    printf("Cost %d: ", p->cost);
-    printArr(p->path);
+    // printf("Cost %d: ", p->cost);
+    // printArr(p->path);
 
-    printf("%d\n", visited_node_count);
+    // printf("%d\n", visited_node_count);
     /* Add children to queue for BFS */
     node_t *aux = currentVertex->edge_out->head;
     while(aux != NULL) {
@@ -238,7 +238,7 @@ int main(int argc, char const *argv[]) {
         }
     }
     fclose(fp);
-    // printGraph(g);
+    printGraph(g);
     MaxTSP(initPath(NULL, NULL, 0));
     printf("Best path: ");
     printArr(bestPath);
