@@ -1,0 +1,39 @@
+\hypertarget{MaxTSP_8c}{}\doxysection{Max\+TSP.\+c File Reference}
+\label{MaxTSP_8c}\index{MaxTSP.c@{MaxTSP.c}}
+
+
+Driver code and functions used for Maximum TSP solver.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}graph.\+h\char`\"{}}\newline
+Include dependency graph for Max\+TSP.\+c\+:
+% FIG 0
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{MaxTSP_8c_abf9e6b7e6f15df4b525a2e7705ba3089}\label{MaxTSP_8c_abf9e6b7e6f15df4b525a2e7705ba3089}} 
+int {\bfseries main} (int argc, char const $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{MaxTSP_8c_a76f11d9a0a47b94f72c2d0e77fb32240}{n}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Driver code and functions used for Maximum TSP solver. 
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{MaxTSP_8c_a76f11d9a0a47b94f72c2d0e77fb32240}\label{MaxTSP_8c_a76f11d9a0a47b94f72c2d0e77fb32240}} 
+\index{MaxTSP.c@{MaxTSP.c}!n@{n}}
+\index{n@{n}!MaxTSP.c@{MaxTSP.c}}
+\doxysubsubsection{\texorpdfstring{n}{n}}
+{\footnotesize\ttfamily int n}
+
+Number of places to visit 
