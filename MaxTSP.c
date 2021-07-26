@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 #include "graph.h"
 #include "MaxTSP.h"
 
@@ -18,7 +19,7 @@ int bestCost;
 int *bestPath;
 int visited_node_count = 0;
 list_t *connected_to_start;
-int bound = 0;
+int bound = 1;
 /*! Allocates and initiates a traversal tree node
  * \param in Edge we took to this state
  * \param cost Cost of the path not including 'in'
@@ -79,13 +80,16 @@ int searchArray(int *A, int x) {
     return 0;
 }
 
-void printArr(int *A) {
+/*! Prints path*/
+void printPath(int *A) {
     for (int i = 0; i < n-1; ++i) {
-        printf("%d ", A[i]);
+        printf("%d ", A[i]+1);
     }
-    printf("%d\n", A[n-1]);
+    printf("%d\n", A[n-1]+1);
 }
 
+/*! Copies current path to bestPath
+ * \param path Current path */
 void saveCurrentBestPath(int *path) {
     for(int i = 0; i < n; i++) {
         if(path[i] != -1)
@@ -97,20 +101,30 @@ void saveCurrentBestPath(int *path) {
     }
 }
 
+/*! Determines if the subGraph starting at vertex v_in has a vertex
+ * with an edge to vertex 0.
+ * \param v_in starting vertex for search
+ * \param path current path
+ * \returns 1 if has return to vertex0
+ * \return 0 otherwise
+ */
 int subGraphReturnsToZero(vertex_t *v_in, int *path) {
-    // int *visited = calloc(n, sizeof(int));
-
+    /* Alocate array of vertexes that will serve as a visited list
+     * and later will be searched for an edge to vertex 0 */
     vertex_t **visited = malloc(sizeof(vertex_t *) * n);
+
     for(int i = 0; i < n; i++)
         visited[i] = NULL;
 
+    /* BFS through subgraph to generate a list of vertexes from v_in
+     * and that aren't in path */
     list_t *dfs_stack = initList();
     push(dfs_stack, initNode(v_in));
     vertex_t *v = NULL;
     while(dfs_stack->size > 0) {
         v = (vertex_t *)pop(dfs_stack);
         if(visited[v->id] == NULL) {
-            visited[v->id] = v;
+            visited[v->id] = v; // add to lsit
         }
         node_t *aux = v->edge_out->head;
         while(aux != NULL) {
@@ -122,6 +136,8 @@ int subGraphReturnsToZero(vertex_t *v_in, int *path) {
             aux = aux->next;
         }
     }
+
+    /* Search list */
     for(int i = 0; i < n; i++) {
         if(visited[i] != NULL) {
             if(edgeToZero(i)) {
@@ -134,15 +150,13 @@ int subGraphReturnsToZero(vertex_t *v_in, int *path) {
     return 0;
 
 }
-/*BOUND IDEA -----------------
-    calculate average cost of all edges, check if traversing down current edge
-    is better than average 
-------------------------------
-    make subgraph that starts on edge 'in'. Check if any of the nodes in 
-    subgraph can go back to original graph through a node not in path.
-    if not, cull all of it
-    ---- 
-    maybe mantain a list of vertexes with return to 0 and one without*/
+/*! Recursively generates all permutations of possible valid paths.
+ * A valid path in one that starts and ends on vertex 0, and doesn't
+ * visit any other vertex more than once.
+ * At the end of the execution, bestCost and bestPath will have, respectively,
+ * the highest cost and its associated path.
+ * \param p current path info
+ * */
 void MaxTSP(path_t *p) {
     vertex_t *currentVertex;
     /* If not entry node */
@@ -171,10 +185,10 @@ void MaxTSP(path_t *p) {
     while(aux != NULL) {
         edge_t *e_aux = (edge_t *)aux->data;
         if(!searchArray(p->path, e_aux->dest->id)) {
-            #ifdef BOUND
-                bound = subGraphReturnsToZero(e_aux->dest, p->path);
-            #else
+            #ifdef NOBOUND
                 bound = 1;
+            #else
+                bound = subGraphReturnsToZero(e_aux->dest, p->path);
             #endif
             if(bound)
                 enqueue(q, initNode(initPath(e_aux, p->path, p->cost)));
@@ -204,6 +218,7 @@ int main(int argc, char const *argv[]) {
         exit(1);
     }
     setbuf(stdout, NULL);
+    // clock_t init_time;
 
     fscanf(fp, "%d", &n);
 
@@ -238,10 +253,13 @@ int main(int argc, char const *argv[]) {
         }
     }
     fclose(fp);
-    printGraph(g);
+    // init_time = clock();
+    // printGraph(g);
     MaxTSP(initPath(NULL, NULL, 0));
-    printf("Best path: ");
-    printArr(bestPath);
-    printf("Total nodes visited: %d\n", visited_node_count);
+    printf("%d\n", bestCost);
+    // printf("Best path: ");
+    printPath(bestPath);
+    // printf("Total nodes visited: %d\n", visited_node_count);
+    // printf("Run time: %ld\n", clock() - init_time);
 	return 0;
 }

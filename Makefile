@@ -8,12 +8,12 @@ CFLAGS = -Wall -g
 OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 
-.PHONY: defult all bound
+.PHONY: defult all nobound
 	
 default: $(TARGET)
 all: default
-bound: CFLAGS += -DBOUND
-bound: $(TARGET)
+nobound: CFLAGS += -DNOBOUND
+nobound: $(TARGET)
 
 %.o: %.c $(HEADERS)
 	$(CC) $(LIBS) $(CFLAGS) -c $< -o $@
